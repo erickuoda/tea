@@ -1,0 +1,29 @@
+
+        #navbarSupportedContent li a {
+            font-size: 20px;
+            color: #ffffff;
+            font-family: Microsoft JhengHei;
+        }
+
+        #navbarSupportedContent li a:hover {
+            color: #cc9900;
+        }
+
+       
+
+        @media (min-width: 982px) {
+            #bgHeader {
+                height: 85px !important;
+            }
+        }
+
+        #footer{
+            background-image: url("/image/footerMountain.jpg");
+            height:380px;
+        }
+
+        #bgHeader{
+            position: fixed;
+            top:0;
+            z-index:100;
+        }
