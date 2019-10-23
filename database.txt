@@ -1,0 +1,7 @@
+1.建立 database 
+
+create database tea
+
+2.匯入newTea.sql
+
+建構完資料庫才可使用
