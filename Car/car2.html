@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="chart1" style="margin-top:50px"></div>
+        <div id="chart2" style="margin-top:100px"></div>
+        <div id="chart3" style="margin-top:100px"></div>
+    </div>
+    <script>
+
+
+
+        $.ajax({
+            url: "./json.txt",
+            method: "GET",
+            success: function (e) {
+                var data1 = JSON.parse(e);
+
+                // 1.	按年份，所有電動車的車型數量圖示
+                var years = [];
+
+                $.each(data1, function (index, value) {
+                    if (years.indexOf(value['YEAR']) < 0) {
+                        years.push(value['YEAR']);
+                    }
+                })
+
+                years.sort(function (a, b) { return a - b });
+                // console.log(years);
+
+                var Xaxis = ['x'];
+                var Yaxis = ['數量'];
+
+                $.each(years, function (index, value) {
+                    Xaxis.push(value);
+                    var cnt = 0;
+                    $.each(data1, function (ind, val) {
+                        if (value == val['YEAR']) {
+                            cnt++;
+                        }
+                    })
+                    Yaxis.push(cnt);
+                })
+
+                // console.log(Xaxis);
+                // console.log(Yaxis);
+                var chart = c3.generate({
+                    bindto: '#chart1',
+                    data: {
+                        x: 'x',
+                        columns: [
+                            Xaxis,
+                            Yaxis
+                        ]
+                    },
+                });
+
+
+                // 2.	各車廠推出的電機車數量佔比圖示
+                var vendors = [];
+                $.each(data1, function (index, value) {
+                    if (vendors.indexOf(value['Make']) < 0) {
+                        vendors.push(value['Make']);
+                    }
+                })
+                // console.log(vendors);
+
+                var vendorCnt = [];
+                $.each(vendors, function (index, value) {
+                    var cnt = 0;
+                    $.each(data1, function (ind, val) {
+                        if (val['Make'] == value) {
+                            cnt++;
+                        }
+                    })
+                    var v = [value, cnt];
+                    vendorCnt.push(v);
+                })
+                // console.log(vendorCnt);
+
+                var chart2 = c3.generate({
+                    bindto: '#chart2',
+                    data: {
+                        columns: vendorCnt,
+                        type: 'pie'
+                    }
+                });
+
+                // 3.	電動車Size的平均電動車馬力(KW)圖示(依照KW由小到大排序)
+                var sizes = [];
+                $.each(data1, function (index, value) {
+                    if (sizes.indexOf(value['Size']) < 0) {
+                        sizes.push(value['Size']);
+                    }
+                })
+
+                var aveSize = [];
+                $.each(sizes, function (index, value) {
+                    var total = 0;
+                    var cnt = 0;
+                    $.each(data1, function (ind, val) {
+                        if (val['Size'] == value) {
+                            total += parseInt(val['(kW)']);
+                            cnt++;
+                        }
+                    })
+                    var v = { 'size': value, 'aveKW': total / cnt };
+                    aveSize.push(v);
+                })
+
+                aveSize.sort(function (a, b) { return a.aveKW - b.aveKW })
+                // console.log(aveSize);
+
+                var Xaxis = ['x'];
+                var Yaxis = ['平均馬力(kW)'];
+
+                $.each(aveSize, function (index, value) {
+                    Xaxis.push(value['size']);
+                    Yaxis.push(value['aveKW']);
+                })
+
+                // console.log(Xaxis);
+                // console.log(Yaxis);
+                var chart = c3.generate({
+                    bindto: '#chart3',
+                    data: {
+                        x: 'x',
+                        columns: [
+                            Xaxis,
+                            Yaxis
+                        ],
+                        type: 'bar'
+                    },
+                    axis: {
+                        x: {
+                            type: 'category',
+                            tick: {
+                                multiline: false
+                            },
+                            // height: 130
+                        }
+                    }
+                });
+            }
+
+
+        })
+    </script>
+</body>
+
+</html>
