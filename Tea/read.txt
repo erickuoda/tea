@@ -1,0 +1,26 @@
+ 
+
+運行Tea laravel專案需要
+
+1.還原 composer.json
+composer install
+
+2.複製.env.example 檔名.env
+
+3.建立資料庫tea(newTea.sql)
+
+4.修改.env檔
+
+DB_DATABASE=tea
+DB_USERNAME=YourUserName
+DB_PASSWORD=YourPassword
+
+5.登入
+
+消費者
+帳號:jc001
+密碼:jc002
+
+店家
+帳號:manager001
+密碼:manager002
